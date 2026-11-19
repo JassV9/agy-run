@@ -1,0 +1,13 @@
+{
+  "name": "agy-run",
+  "owner": { "name": "JassV9", "url": "https://github.com/JassV9" },
+  "metadata": { "description": "Run Gemini 4 Neon as a visible subagent from Claude." },
+  "plugins": [
+    {
+      "name": "gemini-neon-subagent",
+      "source": "./",
+      "description": "Delegate bounded subtasks to Gemini 4 Neon via the Antigravity CLI (agy), watched live in a Terminal tab.",
+      "version": "2.0.0"
+    }
+  ]
+}
