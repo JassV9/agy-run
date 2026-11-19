@@ -16,7 +16,7 @@ claude plugin validate . >/dev/null
 mkdir -p dist
 ZIP="dist/gemini-neon-subagent-$V.zip"
 rm -f "$ZIP"
-(cd skills && zip -qr "../$ZIP" gemini-neon-subagent)
+(cd skills && python3 -m zipfile -c "../$ZIP" gemini-neon-subagent)
 
 NOTES=$(awk -v v="$V" '$0 ~ "^## "v {f=1; next} /^## / && f {exit} f' CHANGELOG.md)
 git tag -a "v$V" -m "v$V"
