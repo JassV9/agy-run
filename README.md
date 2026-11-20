@@ -29,7 +29,7 @@ claude plugin marketplace add JassV9/agy-run && claude plugin install gemini-neo
 git clone https://github.com/JassV9/agy-run.git && ./agy-run/install.sh
 ```
 
-This puts `agy-run` and `agy-wait` in `~/.local/bin` and their code in `~/.local/share/agy-run/`. To update later: `git -C agy-run pull && ./agy-run/install.sh`.
+This puts `agy-run` and `agy-wait` in `~/.local/bin`. It's a one-time step: the launchers always run the code from the newest installed plugin version, so they update whenever the plugin does. (Optional: without it, Claude runs the scripts straight from the plugin folder.)
 
 ### claude.ai (web / desktop Chat tab)
 
@@ -41,7 +41,7 @@ Download `gemini-neon-subagent-<version>.zip` from the [latest release](https://
 claude plugin marketplace update agy-run && claude plugin update gemini-neon-subagent@agy-run
 ```
 
-Re-run `./install.sh` after `git pull` if the wrapper changed (see [CHANGELOG](CHANGELOG.md)).
+**Auto-update:** Claude Code doesn't auto-update third-party marketplaces by default. Turn it on once per machine: run `claude` in a terminal, open `/plugin` → Marketplaces → `agy-run` → enable auto-update. New versions then install at startup. See [CHANGELOG](CHANGELOG.md) for what changed.
 
 ## Usage
 

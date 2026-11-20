@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.0 — 2026-11-20
+- The `agy-run` / `agy-wait` launchers now run the newest installed plugin version of the code (falling back to `~/.local/share/agy-run`), so the tools update together with the plugin. `install.sh` becomes a one-time step.
+- Without `install.sh`, the skill runs the scripts straight from the plugin folder.
+
 ## 3.0.0 — 2026-11-20
 - **Live diffs in the Terminal tab.** `agy-run` is now a Node runner (`agy-run.mjs`) that snapshots each file before Gemini edits it and prints a colored diff the moment the edit lands, plus every read, search and command (with output), a live status line with a timer, and a files-changed summary at the end.
 - **No more polling.** New `agy-wait BRIEF` blocks until the run finishes; Claude runs it as a background command and gets woken with a compact report (status, attempts, files changed, stderr on failure, full answer). It also catches runs that never started in the tab or died.

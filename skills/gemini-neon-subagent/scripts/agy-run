@@ -1,3 +1,16 @@
 #!/usr/bin/env bash
-# Thin launcher; the real work is in agy-run.mjs (installed by install.sh).
-exec node "${AGY_RUN_HOME:-$HOME/.local/share/agy-run}/agy-run.mjs" "$@"
+# Launcher for agy-run / agy-wait. Runs the newest copy of the code it can find, so the
+# tools update whenever the Claude plugin updates:
+#   1. $AGY_RUN_HOME (if set)
+#   2. the newest installed gemini-neon-subagent plugin version
+#   3. ~/.local/share/agy-run (copied there by install.sh)
+name="$(basename "$0").mjs"
+dir="${AGY_RUN_HOME:-}"
+if [ -z "$dir" ]; then
+  cfg="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+  dir=$(ls -d "$cfg"/plugins/cache/*/gemini-neon-subagent/*/skills/gemini-neon-subagent/scripts 2>/dev/null \
+        | awk -F/ '{ print $(NF-3) "\t" $0 }' | sort -t. -k1,1n -k2,2n -k3,3n | tail -n 1 | cut -f2-)
+  [ -n "$dir" ] && [ -f "$dir/$name" ] || dir="$HOME/.local/share/agy-run"
+fi
+[ -f "$dir/$name" ] || { echo "$(basename "$0"): cannot find $name (install the plugin or run install.sh)" >&2; exit 127; }
+exec node "$dir/$name" "$@"

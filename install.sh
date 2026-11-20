@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Installs the agy-run tools the skill uses for visible (Terminal-tab) runs:
+# Installs the agy-run tools the skill uses for visible (Terminal-tab) runs.
+# One-time: the launchers run the newest installed Claude plugin copy of the code
+# when there is one, so they update with the plugin; the copy below is the fallback.
 #   ~/.local/bin/agy-run, ~/.local/bin/agy-wait   launchers
 #   ~/.local/share/agy-run/*.mjs                  the code they run
 # Needs: agy (Antigravity CLI), node 18+, and git or diff (for the live diffs).

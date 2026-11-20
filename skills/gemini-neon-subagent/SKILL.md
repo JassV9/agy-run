@@ -14,7 +14,9 @@ The user wants to SEE Gemini work. Whenever a Terminal-panel tool (`run_in_termi
 - Run `agy --version`. If missing, tell the user to install Antigravity CLI (`curl -fsSL https://antigravity.google/cli/install.sh | bash`, or the installer from antigravity.google on Windows). Do not install it silently.
 - Run `agy models` and confirm a `gemini-4-neon-*` slug exists. Neon needs a paid Google AI plan or a GEMINI_API_KEY. If absent, report it and stop.
 - Headless runs use cached credentials. If the run returns `authentication required`, ask the user to run interactive `agy` once to sign in.
-- For visible runs, check `command -v agy-run agy-wait` (installed by `install.sh` from github.com/JassV9/agy-run into `~/.local/bin`, with the code in `~/.local/share/agy-run/`). If missing, or if `agy-wait` is missing (an older v2 install), fall back to headless mode and tell the user they can install or update it with: `git clone https://github.com/JassV9/agy-run.git && ./agy-run/install.sh`.
+- For visible runs you need `agy-run` and `agy-wait` (and `node`). Check `command -v agy-run agy-wait`. On PATH, they always run the newest installed plugin version, so they stay current on their own. If they are not on PATH (or only `agy-run` is, an old v2 install), use the scripts shipped with this skill directly: find the newest copy with
+  `ls -d ~/.claude/plugins/cache/*/gemini-neon-subagent/*/skills/gemini-neon-subagent/scripts ~/.claude/skills/*/*/gemini-neon-subagent/scripts 2>/dev/null`
+  and, in every command below, write `node <that dir>/agy-run.mjs` for `agy-run` and `node <that dir>/agy-wait.mjs` for `agy-wait`. Mention once that `git clone https://github.com/JassV9/agy-run.git && ./agy-run/install.sh` puts short commands on PATH. If no copy exists at all, fall back to headless mode.
 
 ## Model slugs
 `gemini-4-neon-low | -medium | -high | -xhigh`. Default to `gemini-4-neon-high`. Use xhigh only for hard reasoning. An unknown slug errors (no fallback), so trust `agy models` over this list if they differ. When Neon is rate limited, follow "Rate limits and stepping down".
