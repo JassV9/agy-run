@@ -1,6 +1,6 @@
 {
   "name": "gemini-neon-subagent",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Delegate bounded subtasks to Gemini 4 Neon through the Antigravity CLI (agy), shown live in a Terminal-panel tab, while Claude orchestrates and verifies.",
   "author": { "name": "JassV9", "url": "https://github.com/JassV9" },
   "homepage": "https://github.com/JassV9/agy-run",

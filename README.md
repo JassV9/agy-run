@@ -5,7 +5,7 @@ A Claude skill (`gemini-neon-subagent`) that lets Claude delegate bounded subtas
 ## Requirements
 
 - [Antigravity CLI](https://antigravity.google) (`agy`), signed in once interactively, with access to a `gemini-4-neon-*` model (paid Google AI plan or `GEMINI_API_KEY`)
-- Node.js (for the live formatter)
+- Node.js 18+ and git (or diff) for the live view and diffs
 - Claude Code / the Claude desktop app's Code tab (the skill needs a shell on your machine)
 
 ## Install
@@ -23,13 +23,13 @@ Or from a terminal:
 claude plugin marketplace add JassV9/agy-run && claude plugin install gemini-neon-subagent@agy-run
 ```
 
-**2. Install the `agy-run` wrapper** (for the live Terminal-tab view; without it the skill falls back to hidden headless runs):
+**2. Install the `agy-run` tools** (the live Terminal-tab view and the `agy-wait` watcher; without them the skill falls back to hidden headless runs):
 
 ```bash
 git clone https://github.com/JassV9/agy-run.git && ./agy-run/install.sh
 ```
 
-This puts `agy-run` in `~/.local/bin` and its formatter in `~/.local/share/agy-run/`.
+This puts `agy-run` and `agy-wait` in `~/.local/bin` and their code in `~/.local/share/agy-run/`. To update later: `git -C agy-run pull && ./agy-run/install.sh`.
 
 ### claude.ai (web / desktop Chat tab)
 
@@ -45,7 +45,15 @@ Re-run `./install.sh` after `git pull` if the wrapper changed (see [CHANGELOG](C
 
 ## Usage
 
-Just ask Claude to hand something to Gemini, e.g. *"have Gemini review src/auth for bugs while you write the tests"*. Claude writes a brief, runs `agy-run gemini-4-neon-high <brief>` in a new Terminal tab, waits for the `[agy-run done: …]` line, then reads and checks the answer. Run logs are kept in `~/.cache/agy-runs/`.
+Just ask Claude to hand something to Gemini, e.g. *"have Gemini review src/auth for bugs while you write the tests"*. Claude:
+
+1. writes a brief and runs `agy-run gemini-4-neon-high <brief>` in a new Terminal tab, where you watch Gemini work: every read, search and command, a colored diff of each file edit as it lands, and the answer streaming in;
+2. runs `agy-wait <brief>` in the background, so it gets woken when Gemini finishes instead of burning tokens polling;
+3. reviews the result (files changed, answer) before using it.
+
+**Rate limits:** `agy-run` spots a rate limit within about a minute and stops with `RATE_LIMITED`, naming the next model down (`next=gemini-4-neon-medium`, `next_family=gemini-3.8-flash-high`). Claude asks whether to step down. Tell it to "keep stepping down" and it adds `--descend` (optionally `--floor MODEL`) so the runner retries down the ladder by itself. Change the ladder with `AGY_LADDER="model1 model2 …"` or a `~/.config/agy-run/ladder` file.
+
+Other knobs: `AGY_DIFF_LINES` (diff lines shown per edit, default 80), `AGY_RATE_LIMIT_ERRORS` (default 3), `AGY_PRINT_TIMEOUT` (default 15m), `AGY_RUN_DIR` (logs, default `~/.cache/agy-runs`).
 
 ## Releasing a new version (maintainer)
 
@@ -62,9 +70,10 @@ Users only get an update when the version number changes.
 .claude-plugin/plugin.json        plugin "gemini-neon-subagent" + version
 skills/gemini-neon-subagent/
   SKILL.md                        the skill
-  scripts/agy-run                 wrapper: live view + logs + done line
-  scripts/agy-watch.mjs           stream-json → readable terminal output
-install.sh                        installs the wrapper to ~/.local
+  scripts/agy-run.mjs             runner: live view, diffs, rate-limit step-down, done-file
+  scripts/agy-wait.mjs            background watcher Claude waits on
+  scripts/agy-run, agy-wait       launchers installed to ~/.local/bin
+install.sh                        installs the tools to ~/.local
 release.sh                        tag + GitHub release + claude.ai zip
 ```
 

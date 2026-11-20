@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Thin launcher; the real work is in agy-wait.mjs (installed by install.sh).
+exec node "${AGY_RUN_HOME:-$HOME/.local/share/agy-run}/agy-wait.mjs" "$@"
